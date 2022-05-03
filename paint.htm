@@ -4,16 +4,16 @@
     <title>paint</title>
     <script>
     function setIframeUrl() {
-        document.getElementById("iframe").src = document.getElementById("input").value;
+        document.getElementById("iframe").src = "data:image/png;base64," + document.getElementById("input").value;
     }
     </script>
     <meta charset="UTF-8"/>
 </head>
 <body>
     <div>
-        <input type="url" id="input" value="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="></input>
+        <input type="url" id="input" value="iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="></input>
         <button onclick="setIframeUrl()">submit</button>
     </div>
-    <iframe id="iframe" src="https://www.w3schools.com"></iframe>
+    <iframe id="iframe" src="https://www.google.com"></iframe>
 </body>
 </html>

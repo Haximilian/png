@@ -4,9 +4,13 @@
 #include <fstream>
 
 #include <arpa/inet.h>
+#include <string.h>
+
+#include "crc.h"
 
 #define BLOCK_SIZE 512
 #define MAGIC_SIZE 8
+#define TYPE_SIZE 4
 
 struct ImageHeader {
     uint32_t width;
@@ -26,7 +30,7 @@ struct ChunkHeader {
 
 struct DataStream {
     char magic[MAGIC_SIZE];
-    struct ChunkHeader headers[0];
+    struct ChunkHeader headerChunck;
 } __attribute__((__packed__));
 
 
@@ -45,10 +49,20 @@ int main(int argc, char** argv) {
     }
     printf("\n");
 
-    struct ImageHeader* imageHeader = (struct ImageHeader*) stream->headers[0].chunkData;
-    printf("chunkType: %.4s\n", stream->headers[0].chunkType);
-    printf("width: %u\n", htonl(imageHeader->width));
-    printf("height: %u\n", htonl(imageHeader->height));
+    struct ChunkHeader* curr = &stream->headerChunck;
+
+    struct ImageHeader* imageHeader = (struct ImageHeader*) curr->chunkData;
+    printf("imageWidth: %u\n", htonl(imageHeader->width));
+    printf("imageHeight: %u\n", htonl(imageHeader->height));
+
+    for (;;) {
+        printf("chunkType: %.4s\n", curr->chunkType);
+        printf("chunkLength: %u\n", htonl(curr->length));
+        if (strncmp(curr->chunkType, "IEND", TYPE_SIZE) == 0) {
+            break;
+        }
+        curr = (struct ChunkHeader*) ((char*) curr + htonl(curr->length) + 12);
+    }
 
     return(0);
 }
